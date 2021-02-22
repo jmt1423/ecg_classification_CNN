@@ -1,0 +1,85 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(ggcorrplot)
+library(gridExtra)
+library(grid)
+library(ggfortify)
+library(caret)
+library(ggpubr)
+```
+
+
+Read in ecg data from tensorflow googel API
+```{r}
+ecg_df <- read.csv("http://storage.googleapis.com/download.tensorflow.org/data/ecg.csv", header = FALSE)
+
+```
+
+Grab data containing normal and abnormal results
+```{r}
+ecg_normal <- filter(ecg_df, V141 == 0)
+ecg_abnormal <- filter(ecg_df, V141 == 1)
+
+ecg_normal <- select(ecg_normal, V1:V140)
+ecg_abnormal <- select(ecg_abnormal, V1:V140)
+```
+
+Visualize and try to see differences in the ECG heart beat data.
+```{r}
+# rowwise - shows how variable each kind of heart beat is
+matplot(t(ecg_normal), type = 'l', main="Normal ECG heart beat", xlab = "time", ylab = "variation")
+matplot(t(ecg_abnormal), type = 'l', main="Abnormal ECG heart beat", xlab = "time", ylab = "variation")
+```
+
+```{r}
+# compare a few different rows of each kind
+matplot(t(ecg_abnormal[403, ]), type = 'l', col = 'red', xlab = 'time', ylab = 'variation', main="Normal vs. Abnormal Heart Beats")
+par(new = TRUE, xpd=TRUE)
+matplot(t(ecg_normal[1000, ]), type = 'l', col = 'blue', axes = FALSE, xlab = "", ylab = "")
+par(new = TRUE, xpd=TRUE)
+matplot(t(ecg_normal[406, ]), type = 'l', col = 'blue', axes = FALSE, xlab = "", ylab = "")
+par(new = TRUE, xpd=TRUE)
+matplot(t(ecg_abnormal[408, ]), type = 'l', col = 'red', axes = FALSE, xlab = "", ylab = "")
+par(new = TRUE, xpd=TRUE)
+matplot(t(ecg_abnormal[300, ]), type = 'l', col = 'red', axes = FALSE, xlab = "", ylab = "")
+# legend(1, 4, c("abnormal", "normal"), col = c("red", "blue"))
+legend(43, -3.3, c("abnormal", "normal"), col = c("red", "blue"),
+       text.col = "black", lty = c(1, 1), merge = TRUE, bg = "transparent")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
